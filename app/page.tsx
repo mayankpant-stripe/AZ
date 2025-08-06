@@ -48,18 +48,17 @@ export default function HomePage() {
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center space-x-2"
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
-                mochi
-              </span>
+              <img
+                src="/Logo.jpg"
+                alt="Health Logo"
+                className="w-8 h-8 rounded-xl object-cover"
+              />
               <Badge variant="secondary" className="text-xs font-medium">HEALTH</Badge>
             </motion.div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              {['Pediatrics', 'About', 'Medications', 'Blogs', 'FAQ', 'Careers'].map((item, index) => (
+              {['About Us', 'Science', 'Medications', 'Blogs', 'FAQ', 'Careers', 'Contact Us'].map((item, index) => (
                 <motion.a
                   key={item}
                   href="#"
@@ -116,7 +115,7 @@ export default function HomePage() {
               className="md:hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 border-t border-slate-200/50 dark:border-slate-700/50"
             >
               <div className="px-4 py-6 space-y-4">
-                {['Pediatrics', 'About', 'Medications', 'Blogs', 'FAQ', 'Careers'].map((item) => (
+                {['About Us', 'Science', 'Medications', 'Blogs', 'FAQ', 'Careers', 'Contact Us'].map((item) => (
                   <a
                     key={item}
                     href="#"
@@ -166,7 +165,7 @@ export default function HomePage() {
                   </span>
                 </h1>
                 <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg">
-                  Customized obesity medicine with doctors that care. Experience healthcare that adapts to your unique needs.
+                  Customized medicine with doctors that care. Experience healthcare that adapts to your unique needs.
                 </p>
               </motion.div>
 
@@ -211,52 +210,36 @@ export default function HomePage() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="relative"
+              className="relative space-y-6"
             >
+              {/* Influenza Image */}
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <img
-                  src="https://sjc.microlink.io/9FVQwc4QCbX6pZNdhNP0dJoWf7d49LGRstK-68bTAE2dPLNKIX3MBD0rOnwwpfbAZZyzmteCm6AYgvxZBTl5cw.jpeg"
-                  alt="Happy diverse women in workout attire"
+                  src="/Influenza.jpg"
+                  alt="Influenza healthcare image"
                   className="w-full h-auto object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </div>
               
-              {/* Floating Cards */}
+              {/* Bluecardiac Image */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-                className="absolute -top-6 -left-6 backdrop-blur-xl bg-white/80 dark:bg-slate-800/80 rounded-2xl p-4 shadow-xl border border-white/20 dark:border-slate-700/20"
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="relative rounded-3xl overflow-hidden shadow-2xl"
               >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm text-slate-900 dark:text-white">95% Success Rate</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">Patient satisfaction</p>
-                  </div>
-                </div>
+                <img
+                  src="/Bluecardiac.png"
+                  alt="Blue cardiac healthcare image"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </motion.div>
+              
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.8 }}
-                className="absolute -bottom-6 -right-6 backdrop-blur-xl bg-white/80 dark:bg-slate-800/80 rounded-2xl p-4 shadow-xl border border-white/20 dark:border-slate-700/20"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm text-slate-900 dark:text-white">24/7 Support</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">Always here for you</p>
-                  </div>
-                </div>
-              </motion.div>
             </motion.div>
+
           </div>
         </div>
       </motion.section>
@@ -272,7 +255,7 @@ export default function HomePage() {
             className="text-center space-y-4 mb-16"
           >
             <Badge className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-700">
-              Why Choose Mochi Health
+              Choose Health
             </Badge>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
               Healthcare that works for you
@@ -363,7 +346,7 @@ export default function HomePage() {
               Ready to transform your health?
             </h2>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Join thousands of patients who have already started their journey to better health with Mochi Health.
+              Join thousands of patients who have already started their journey to better health with us.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -391,10 +374,11 @@ export default function HomePage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                  <Heart className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">mochi</span>
+                <img
+                  src="/Logo.jpg"
+                  alt="Health Logo"
+                  className="w-8 h-8 rounded-xl object-cover"
+                />
                 <Badge variant="secondary" className="text-xs">HEALTH</Badge>
               </div>
               <p className="text-slate-400 leading-relaxed">
@@ -405,7 +389,7 @@ export default function HomePage() {
             {[
               {
                 title: "Services",
-                links: ["Pediatrics", "Medications", "Consultations", "Lab Tests"]
+                links: ["About Us", "Medications", "Consultations", "Lab Tests"]
               },
               {
                 title: "Company",
@@ -433,7 +417,7 @@ export default function HomePage() {
           
           <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-slate-400 text-sm">
-              © 2024 Mochi Health. All rights reserved.
+              © 2024 Health. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 sm:mt-0">
               <a href="#" className="text-slate-400 hover:text-white transition-colors duration-200">
