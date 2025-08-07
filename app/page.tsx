@@ -7,17 +7,43 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Heart, Shield, Users, Zap, Star, CheckCircle, Play, Moon, Sun, Menu, X } from 'lucide-react'
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { useTheme } from "next-themes"
+import { MembershipModal } from "@/components/membership-modal"
+import { SubscriptionSuccess } from "@/components/subscription-success"
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedMembership, setSelectedMembership] = useState<'monthly' | 'quarterly'>('monthly')
+  const [subscriptionSuccess, setSubscriptionSuccess] = useState<{
+    customerName: string
+    subscriptionId: string
+    invoiceId?: string
+  } | null>(null)
   const { scrollYProgress } = useScroll()
   const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0.95])
   const heroY = useTransform(scrollYProgress, [0, 1], [0, -100])
 
   useEffect(() => {
     setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const success = urlParams.get('success')
+    const subscriptionId = urlParams.get('subscription_id')
+    const customerName = urlParams.get('customer_name')
+
+    if (success === 'true' && subscriptionId && customerName) {
+      setSubscriptionSuccess({
+        customerName: decodeURIComponent(customerName),
+        subscriptionId,
+        invoiceId: urlParams.get('invoice_id') || undefined
+      })
+      // Clean up the URL
+      window.history.replaceState({}, document.title, window.location.pathname)
+    }
   }, [])
 
   const fadeInUp = {
@@ -141,10 +167,10 @@ export default function HomePage() {
       {/* Hero Section */}
       <motion.section 
         style={{ y: heroY }}
-        className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 overflow-hidden"
+        className="relative pt-24 pb-4 sm:pt-32 sm:pb-8 overflow-hidden"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
             <motion.div 
               variants={staggerContainer}
               initial="initial"
@@ -152,16 +178,9 @@ export default function HomePage() {
               className="space-y-8"
             >
               <motion.div variants={fadeInUp} className="space-y-6">
-                <Badge className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700">
-                  ✨ Personalized Healthcare
-                </Badge>
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
                   <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
-                    Work with your hormones,
-                  </span>
-                  <br />
-                  <span className="italic text-slate-600 dark:text-slate-400 text-3xl sm:text-4xl lg:text-5xl">
-                    not against them
+                    We work with you
                   </span>
                 </h1>
                 <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg">
@@ -210,7 +229,7 @@ export default function HomePage() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="relative space-y-6"
+              className="relative"
             >
               {/* Influenza Image */}
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
@@ -221,23 +240,6 @@ export default function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </div>
-              
-              {/* Bluecardiac Image */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-                className="relative rounded-3xl overflow-hidden shadow-2xl"
-              >
-                <img
-                  src="/Bluecardiac.png"
-                  alt="Blue cardiac healthcare image"
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </motion.div>
-              
-
             </motion.div>
 
           </div>
@@ -245,7 +247,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* Features Section */}
-      <section className="py-24 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+      <section className="pt-8 pb-8 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -332,7 +334,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 relative overflow-hidden">
+      <section className="pt-8 pb-20 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=400&width=400')] opacity-10" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <motion.div
@@ -345,24 +347,86 @@ export default function HomePage() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
               Ready to transform your health?
             </h2>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+                        <p className="text-xl text-blue-100 max-w-2xl mx-auto">
               Join thousands of patients who have already started their journey to better health with us.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-white text-blue-600 hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl px-8 py-6 text-lg font-semibold group"
-              >
-                Check Eligibility
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-2 border-white/30 text-white hover:bg-white/10 rounded-2xl px-8 py-6 text-lg font-semibold backdrop-blur-sm"
-              >
-                Schedule Consultation
-              </Button>
+            
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {/* Monthly Membership */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
+                <div className="text-center mb-4">
+                  <h3 className="text-2xl font-bold text-white mb-2">Monthly Membership</h3>
+                  <div className="text-3xl font-bold text-white mb-1">$25</div>
+                  <div className="text-blue-200 text-sm">/month</div>
+                  <div className="text-blue-200 text-xs mt-1">Renews every month</div>
+                </div>
+                <ul className="space-y-2 text-sm text-blue-100">
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Ongoing care and monitoring
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Prescription if medically necessary
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Advanced therapy
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Mental health support
+                  </li>
+                </ul>
+                <Button 
+                  className="w-full mt-6 bg-white text-blue-600 hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl py-3 font-semibold"
+                  onClick={() => {
+                    console.log('Monthly button clicked')
+                    setSelectedMembership('monthly')
+                    setIsModalOpen(true)
+                    console.log('Modal should be open:', true)
+                  }}
+                >
+                  Choose Monthly
+                </Button>
+              </div>
+
+              {/* Quarterly Membership */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
+                <div className="text-center mb-4">
+                  <h3 className="text-2xl font-bold text-white mb-2">Quarterly Membership</h3>
+                  <div className="text-3xl font-bold text-white mb-1">$55</div>
+                  <div className="text-blue-200 text-sm">/3 months</div>
+                  <div className="text-blue-200 text-xs mt-1">Renews every quarter</div>
+                </div>
+                <ul className="space-y-2 text-sm text-blue-100">
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Ongoing care and monitoring
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Prescription if medically necessary
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Advanced therapy
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Mental health support
+                  </li>
+                </ul>
+                <Button 
+                  className="w-full mt-6 bg-white text-blue-600 hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl py-3 font-semibold"
+                  onClick={() => {
+                    setSelectedMembership('quarterly')
+                    setIsModalOpen(true)
+                  }}
+                >
+                  Choose Quarterly
+                </Button>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -430,6 +494,21 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+            <MembershipModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        membershipType={selectedMembership} 
+      />
+
+      {subscriptionSuccess && (
+        <SubscriptionSuccess
+          customerName={subscriptionSuccess.customerName}
+          subscriptionId={subscriptionSuccess.subscriptionId}
+          invoiceId={subscriptionSuccess.invoiceId}
+          onClose={() => setSubscriptionSuccess(null)}
+        />
+      )}
     </div>
   )
 }
