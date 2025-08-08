@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-07-30.basil',
 });
 
 export async function POST(request: NextRequest) {
   console.log('=== CREATE SUBSCRIPTION API CALLED ===');
   try {
-    const { customerName, customerEmail, membershipType } = await request.json();
-    console.log('Creating subscription for:', { customerName, customerEmail, membershipType });
+    const { customerName, customerEmail, patientNumber, prescribingDoctor, membershipType } = await request.json();
+    console.log('Creating subscription for:', { customerName, customerEmail, patientNumber, prescribingDoctor, membershipType });
 
     // 1. Create a test clock with current time
     console.log('Creating test clock...');
@@ -24,27 +24,79 @@ export async function POST(request: NextRequest) {
       name: customerName,
       email: customerEmail,
       test_clock: testClock.id,
+      address: {
+        line1: "1 W main street",
+        city: "Marshalltown",
+        state: "Iowa",
+        country: "US",
+        postal_code: "50158",
+        line2: "",
+      },
+      shipping: {
+        name: customerName,
+        address: {
+          line1: "1 W main street",
+          city: "Marshalltown",
+          state: "Iowa",
+          country: "US",
+          postal_code: "50158",
+          line2: "",
+        },
+      },
     });
     console.log('Customer created:', customer.id);
 
-    // 3. Create a checkout session for payment method collection
-    console.log('Creating checkout session...');
-    const session = await stripe.checkout.sessions.create({
-      customer: customer.id,
-      // payment_method_types: ['card', 'bacs_debit', 'sepa_debit', 'ideal', 'sofort'],
-      mode: 'setup',
-      currency: 'usd',
-      automatic_tax: {
-        enabled: false,
-      },
-      success_url: `${request.nextUrl.origin}/api/complete-subscription?session_id={CHECKOUT_SESSION_ID}&customer_id=${customer.id}&test_clock_id=${testClock.id}&customer_name=${encodeURIComponent(customerName)}`,
-      cancel_url: `${request.nextUrl.origin}/?canceled=true`,
-      metadata: {
-        customer_id: customer.id,
-        test_clock_id: testClock.id,
-        price_id: membershipType === 'monthly' ? 'price_1RtF7GGSpNbgjDfWCCtMPCqh' : 'price_1RtF7pGSpNbgjDfWuamgPFeq',
-      },
-    });
+              // 3. Create a checkout session for payment method collection
+          console.log('Creating checkout session...');
+          
+          // Calculate prescription_valid date based on membership type
+          const currentDate = new Date();
+          let prescriptionValidDate;
+          
+          if (membershipType === 'quarterly') {
+            // For quarterly: 6 months from now
+            const endDate = new Date(currentDate);
+            endDate.setMonth(endDate.getMonth() + 6);
+            prescriptionValidDate = endDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+          } else if (membershipType === 'annual') {
+            // For annual: 12 months from now
+            const endDate = new Date(currentDate);
+            endDate.setMonth(endDate.getMonth() + 12);
+            prescriptionValidDate = endDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+          } else {
+            // For monthly: 1 month from now
+            const endDate = new Date(currentDate);
+            endDate.setMonth(endDate.getMonth() + 1);
+            prescriptionValidDate = endDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+          }
+          
+          const session = await stripe.checkout.sessions.create({
+            customer: customer.id,
+            payment_method_types: ['card'], // Force US card payment methods
+            mode: 'setup',
+            currency: 'usd',
+            locale: 'en', // Set to US English locale
+            billing_address_collection: 'required', // Force address collection
+            custom_text: {
+              submit: {
+                message: "Please enter your billing address to complete the setup.",
+              },
+            },
+            automatic_tax: {
+              enabled: false,
+            },
+            success_url: `${request.nextUrl.origin}/api/complete-subscription?session_id={CHECKOUT_SESSION_ID}&customer_id=${customer.id}&test_clock_id=${testClock.id}&customer_name=${encodeURIComponent(customerName)}`,
+            cancel_url: `${request.nextUrl.origin}/?canceled=true`,
+            metadata: {
+              customer_id: customer.id,
+              test_clock_id: testClock.id,
+              price_id: membershipType === 'monthly' ? 'price_1RtF7GGSpNbgjDfWCCtMPCqh' : membershipType === 'quarterly' ? 'price_1RtF7pGSpNbgjDfWuamgPFeq' : 'price_1Rtr03GSpNbgjDfWtUM9Nyll',
+              membership_type: membershipType,
+              patient_number: patientNumber,
+              prescribing_doctor: prescribingDoctor,
+              prescription_valid: prescriptionValidDate,
+            },
+          });
 
     console.log('Checkout session created:', session.id, 'URL:', session.url);
 

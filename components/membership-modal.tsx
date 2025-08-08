@@ -10,12 +10,14 @@ import { Loader2 } from 'lucide-react'
 interface MembershipModalProps {
   isOpen: boolean
   onClose: () => void
-  membershipType: 'monthly' | 'quarterly'
+  membershipType: 'monthly' | 'quarterly' | 'annual'
 }
 
 export function MembershipModal({ isOpen, onClose, membershipType }: MembershipModalProps) {
   const [customerName, setCustomerName] = useState('')
   const [customerEmail, setCustomerEmail] = useState('')
+  const [patientNumber, setPatientNumber] = useState('')
+  const [prescribingDoctor, setPrescribingDoctor] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -26,7 +28,7 @@ export function MembershipModal({ isOpen, onClose, membershipType }: MembershipM
     setIsLoading(true)
     setError('')
 
-    console.log('Submitting form with:', { customerName, customerEmail, membershipType })
+    console.log('Submitting form with:', { customerName, customerEmail, patientNumber, prescribingDoctor, membershipType })
 
     try {
       console.log('Making API call to /api/create-subscription')
@@ -38,6 +40,8 @@ export function MembershipModal({ isOpen, onClose, membershipType }: MembershipM
         body: JSON.stringify({
           customerName,
           customerEmail,
+          patientNumber,
+          prescribingDoctor,
           membershipType,
         }),
       })
@@ -71,7 +75,7 @@ export function MembershipModal({ isOpen, onClose, membershipType }: MembershipM
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {membershipType === 'monthly' ? 'Monthly Membership' : 'Quarterly Membership'}
+            {membershipType === 'monthly' ? 'Monthly Membership' : membershipType === 'quarterly' ? 'Quarterly Membership' : 'Annual Membership'}
           </DialogTitle>
         </DialogHeader>
         
@@ -100,6 +104,30 @@ export function MembershipModal({ isOpen, onClose, membershipType }: MembershipM
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="patientNumber">Patient Number</Label>
+            <Input
+              id="patientNumber"
+              type="text"
+              value={patientNumber}
+              onChange={(e) => setPatientNumber(e.target.value)}
+              placeholder="Enter your patient number"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="prescribingDoctor">Prescribing Doctor</Label>
+            <Input
+              id="prescribingDoctor"
+              type="text"
+              value={prescribingDoctor}
+              onChange={(e) => setPrescribingDoctor(e.target.value)}
+              placeholder="Enter prescribing doctor name"
+              required
+            />
+          </div>
+
           {error && (
             <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md">
               {error}
@@ -118,7 +146,7 @@ export function MembershipModal({ isOpen, onClose, membershipType }: MembershipM
             </Button>
             <Button
               type="submit"
-              disabled={isLoading || !customerName || !customerEmail}
+              disabled={isLoading || !customerName || !customerEmail || !patientNumber || !prescribingDoctor}
               className="flex-1"
             >
               {isLoading ? (

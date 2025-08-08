@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-07-30.basil',
 });
 
 export async function GET(request: NextRequest) {
@@ -56,56 +56,148 @@ export async function GET(request: NextRequest) {
     });
     console.log('Payment method attached successfully');
 
-    // Set as default payment method
-    console.log('Setting payment method as default');
+    // Set as default payment method and update customer with address from checkout
+    console.log('Setting payment method as default and updating customer address');
+    
+    // Get customer details from checkout session
+    const checkoutCustomerDetails = session.customer_details;
+    console.log('=== CHECKOUT SESSION ADDRESS DEBUG ===');
+    console.log('Full session object:', JSON.stringify(session, null, 2));
+    console.log('Customer details from checkout:', checkoutCustomerDetails);
+    console.log('Address from checkout:', checkoutCustomerDetails?.address);
+    console.log('Name from checkout:', checkoutCustomerDetails?.name);
+    
+    // Just set the payment method as default - don't override the address that was set during customer creation
+    console.log('Setting payment method as default...');
     await stripe.customers.update(customerId as string, {
       invoice_settings: {
         default_payment_method: setupIntent.payment_method as string,
       },
     });
     console.log('Payment method set as default');
+    
+    // Verify the customer address is correct
+    const customerForVerification = await stripe.customers.retrieve(customerId as string);
+    if ('address' in customerForVerification) {
+      console.log('Customer address (should be Marshalltown):', customerForVerification.address);
+      console.log('Customer shipping:', customerForVerification.shipping);
+    }
 
-    // 4. Create a subscription with the specified price
-    const priceId = session.metadata?.price_id || 'price_1RtF7GGSpNbgjDfWCCtMPCqh';
-    console.log('Creating subscription with price:', priceId);
-    // Create subscription with automatic tax enabled (matching dashboard request)
-    console.log('Creating subscription with automatic tax enabled...');
-    const subscription = await stripe.subscriptions.create({
-      customer: customerId as string,
-      items: [{ price: priceId, quantity: 1 }],
-      default_payment_method: setupIntent.payment_method as string,
-      automatic_tax: {
-        enabled: true,
-      },
-      currency: 'usd',
-      off_session: true,
-      payment_behavior: 'error_if_incomplete',
-      proration_behavior: 'none',
-    });
-    console.log('Subscription created with automatic tax:', subscription.id);
-    console.log('Subscription details:', {
-      id: subscription.id,
-      status: subscription.status,
-      automatic_tax: subscription.automatic_tax,
-      tax_percent: subscription.tax_percent,
-      items: subscription.items.data.map(item => ({
-        price: item.price.id,
-        amount: item.price.unit_amount,
-        currency: item.price.currency
-      }))
-    });
+              // 4. Create a subscription schedule directly (no regular subscription)
+          const priceId = session.metadata?.price_id || 'price_1RtF7GGSpNbgjDfWCCtMPCqh';
+          console.log('Creating subscription schedule with price:', priceId);
+          
+          // Calculate end date based on membership type
+          const startDate = new Date();
+          const endDate = new Date(startDate);
+          
+          // Get membership type from session metadata
+          const membershipType = session.metadata?.membership_type || 'monthly';
+          
+          if (membershipType === 'annual') {
+            endDate.setMonth(endDate.getMonth() + 12); // Add exactly 12 months for annual
+          } else {
+            endDate.setMonth(endDate.getMonth() + 6); // Add exactly 6 months for monthly/quarterly
+          }
+          
+          // Format prescription_valid as date only (YYYY-MM-DD) - this will be the subscription schedule end date
+          const prescriptionValidDate = endDate.toISOString().split('T')[0]; // Gets YYYY-MM-DD format
+          
+          console.log('Creating subscription schedule with automatic tax enabled...');
+          console.log('Session metadata:', session.metadata);
+          console.log('Metadata being set:', {
+            patient_number: session.metadata?.patient_number || '',
+            prescribing_doctor: session.metadata?.prescribing_doctor || '',
+            prescription_valid: prescriptionValidDate
+          });
+          console.log('Raw session metadata values:', {
+            patient_number_raw: session.metadata?.patient_number,
+            prescribing_doctor_raw: session.metadata?.prescribing_doctor,
+            prescription_valid_raw: session.metadata?.prescription_valid
+          });
+          
+          // Debug: Check customer details
+          console.log('=== CUSTOMER DEBUG INFO ===');
+          if ('address' in customerForVerification) {
+            console.log('Customer address:', customerForVerification.address);
+            console.log('Customer tax info:', customerForVerification.tax);
+            console.log('Customer metadata:', customerForVerification.metadata);
+          }
+          
+          // Debug: Check price details
+          console.log('=== PRICE DEBUG INFO ===');
+          const priceDetails = await stripe.prices.retrieve(priceId);
+          console.log('Price details:', {
+            id: priceDetails.id,
+            currency: priceDetails.currency,
+            unit_amount: priceDetails.unit_amount,
+            product: priceDetails.product,
+            tax_behavior: priceDetails.tax_behavior,
+          });
+          
+          const subscriptionSchedule = await stripe.subscriptionSchedules.create({
+            customer: customerId as string,
+            start_date: Math.floor(startDate.getTime() / 1000), // Current time
+            end_behavior: 'cancel',
+            default_settings: {
+            default_payment_method: setupIntent.payment_method as string,
+            automatic_tax: {
+                enabled: true,  // true | false 
+              },
+            },
+            metadata: {
+              patient_number: session.metadata?.patient_number || '',
+              prescribing_doctor: session.metadata?.prescribing_doctor || '',
+              prescription_valid: prescriptionValidDate, // Subscription schedule end date as YYYY-MM-DD
+            },
+            phases: [
+              {
+                automatic_tax: {
+                  enabled: true,
+                },
+                items: [
+                  {
+                    price: priceId,
+                    quantity: 1,
+                  },
+                ],
+                end_date: Math.floor(endDate.getTime() / 1000), // Exactly 6 months from start
+                metadata: {
+                  patient_number: session.metadata?.patient_number || '',
+                  prescribing_doctor: session.metadata?.prescribing_doctor || '',
+                  prescription_valid: prescriptionValidDate, // Subscription schedule end date as YYYY-MM-DD
+                },
+              },
+            ],
+          });
+          
+          console.log('Subscription schedule created successfully!');
+          console.log('Schedule ID:', subscriptionSchedule.id);
+          console.log('Schedule metadata:', subscriptionSchedule.metadata);
+          console.log('Schedule details:', {
+            id: subscriptionSchedule.id,
+            end_behavior: subscriptionSchedule.end_behavior,
+            metadata: subscriptionSchedule.metadata,
+            phases: subscriptionSchedule.phases.map(phase => ({
+              start_date: phase.start_date,
+              end_date: phase.end_date,
+              items: phase.items.map(item => ({
+                price: item.price,
+                quantity: item.quantity,
+              })),
+            })),
+          });
+          console.log('=== SUBSCRIPTION SCHEDULE CREATION SUCCESSFUL ===');
 
-    console.log('Subscription created:', subscription.id);
-
-    // 5. Advance the test clock by 1 hour
+    // 6. Advance the test clock by 1 hour
     await stripe.testHelpers.testClocks.advance(testClockId as string, {
       frozen_time: Math.floor(Date.now() / 1000) + 3600, // Current time + 1 hour
     });
 
     console.log('Test clock advanced by 1 hour');
 
-    const customerName = searchParams.get('customer_name') || 'Customer';
-    return NextResponse.redirect(`${request.nextUrl.origin}/?success=true&subscription_id=${subscription.id}&customer_name=${encodeURIComponent(customerName)}`);
+              const customerName = searchParams.get('customer_name') || 'Customer';
+          return NextResponse.redirect(`${request.nextUrl.origin}/?success=true&subscription_id=${subscriptionSchedule.id}&customer_name=${encodeURIComponent(customerName)}`);
 
   } catch (error) {
     console.error('=== ERROR IN COMPLETE SUBSCRIPTION ===');

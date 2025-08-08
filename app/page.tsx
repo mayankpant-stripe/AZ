@@ -15,7 +15,7 @@ export default function HomePage() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedMembership, setSelectedMembership] = useState<'monthly' | 'quarterly'>('monthly')
+  const [selectedMembership, setSelectedMembership] = useState<'monthly' | 'quarterly' | 'annual'>('monthly')
   const [subscriptionSuccess, setSubscriptionSuccess] = useState<{
     customerName: string
     subscriptionId: string
@@ -351,7 +351,7 @@ export default function HomePage() {
               Join thousands of patients who have already started their journey to better health with us.
             </p>
             
-            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
               {/* Monthly Membership */}
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
                 <div className="text-center mb-4">
@@ -425,6 +425,43 @@ export default function HomePage() {
                   }}
                 >
                   Choose Quarterly
+                </Button>
+              </div>
+
+              {/* Annual Membership */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
+                <div className="text-center mb-4">
+                  <h3 className="text-2xl font-bold text-white mb-2">Annual Membership</h3>
+                  <div className="text-3xl font-bold text-white mb-1">$180</div>
+                  <div className="text-blue-200 text-sm">/year</div>
+                  <div className="text-blue-200 text-xs mt-1">Renews every year</div>
+                </div>
+                <ul className="space-y-2 text-sm text-blue-100">
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Ongoing care and monitoring
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Prescription if medically necessary
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Advanced therapy
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                    Mental health support
+                  </li>
+                </ul>
+                <Button 
+                  className="w-full mt-6 bg-white text-blue-600 hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl py-3 font-semibold"
+                  onClick={() => {
+                    setSelectedMembership('annual')
+                    setIsModalOpen(true)
+                  }}
+                >
+                  Choose Annual
                 </Button>
               </div>
             </div>
