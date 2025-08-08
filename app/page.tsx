@@ -356,18 +356,17 @@ export default function HomePage() {
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
                 <div className="text-center mb-4">
                   <h3 className="text-2xl font-bold text-white mb-2">Monthly Membership</h3>
-                  <div className="text-3xl font-bold text-white mb-1">$25</div>
-                  <div className="text-blue-200 text-sm">/month</div>
+                  <div className="text-xl font-bold text-white mb-1">$25/month</div>
                   <div className="text-blue-200 text-xs mt-1">Renews every month</div>
                 </div>
                 <ul className="space-y-2 text-sm text-blue-100">
                   <li className="flex items-center">
                     <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
-                    Ongoing care and monitoring
+                    Ongoing care
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
-                    Prescription if medically necessary
+                    Prescription
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
@@ -395,18 +394,17 @@ export default function HomePage() {
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
                 <div className="text-center mb-4">
                   <h3 className="text-2xl font-bold text-white mb-2">Quarterly Membership</h3>
-                  <div className="text-3xl font-bold text-white mb-1">$55</div>
-                  <div className="text-blue-200 text-sm">/3 months</div>
+                  <div className="text-xl font-bold text-white mb-1">$55/quarter</div>
                   <div className="text-blue-200 text-xs mt-1">Renews every quarter</div>
                 </div>
                 <ul className="space-y-2 text-sm text-blue-100">
                   <li className="flex items-center">
                     <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
-                    Ongoing care and monitoring
+                    Ongoing care
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
-                    Prescription if medically necessary
+                    Prescription
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
@@ -432,18 +430,17 @@ export default function HomePage() {
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
                 <div className="text-center mb-4">
                   <h3 className="text-2xl font-bold text-white mb-2">Annual Membership</h3>
-                  <div className="text-3xl font-bold text-white mb-1">$180</div>
-                  <div className="text-blue-200 text-sm">/year</div>
+                  <div className="text-xl font-bold text-white mb-1">$250/year</div>
                   <div className="text-blue-200 text-xs mt-1">Renews every year</div>
                 </div>
                 <ul className="space-y-2 text-sm text-blue-100">
                   <li className="flex items-center">
                     <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
-                    Ongoing care and monitoring
+                    Ongoing care
                   </li>
-                  <li className="flex items-center">
+                  <li className="flex items-left">
                     <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
-                    Prescription if medically necessary
+                    Prescription
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
