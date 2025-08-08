@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
           
           const session = await stripe.checkout.sessions.create({
             customer: customer.id,
-            payment_method_types: ['card'], // Force US card payment methods
+            //payment_method_types: ['card'], // Force US card payment methods
             mode: 'setup',
             currency: 'usd',
             locale: 'en', // Set to US English locale
