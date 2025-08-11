@@ -1,3 +1,5 @@
 {
+  "/api/complete-subscription/route": "app/api/complete-subscription/route.js",
+  "/api/create-subscription/route": "app/api/create-subscription/route.js",
   "/page": "app/page.js"
 }
