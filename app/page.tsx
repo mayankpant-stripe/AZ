@@ -87,7 +87,7 @@ export default function HomePage() {
               {['About Us', 'Science', 'Medications', 'Blogs', 'FAQ', 'Careers', 'Contact Us'].map((item, index) => (
                 <motion.a
                   key={item}
-                  href="#"
+                  href={item === 'FAQ' ? '/customer-journey' : '#'}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -144,7 +144,7 @@ export default function HomePage() {
                 {['About Us', 'Science', 'Medications', 'Blogs', 'FAQ', 'Careers', 'Contact Us'].map((item) => (
                   <a
                     key={item}
-                    href="#"
+                    href={item === 'FAQ' ? '/customer-journey' : '#'}
                     className="block text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                   >
                     {item}
@@ -487,24 +487,39 @@ export default function HomePage() {
             {[
               {
                 title: "Services",
-                links: ["About Us", "Medications", "Consultations", "Lab Tests"]
+                links: [
+                  { text: "About Us", href: "#" },
+                  { text: "Medications", href: "#" },
+                  { text: "Consultations", href: "#" },
+                  { text: "Lab Tests", href: "#" }
+                ]
               },
               {
                 title: "Company",
-                links: ["About", "Careers", "Blog", "Press"]
+                links: [
+                  { text: "About", href: "#" },
+                  { text: "Careers", href: "#" },
+                  { text: "Blog", href: "#" },
+                  { text: "Press", href: "#" }
+                ]
               },
               {
                 title: "Support",
-                links: ["FAQ", "Contact", "Privacy", "Terms"]
+                links: [
+                  { text: "FAQ", href: "/customer-journey" },
+                  { text: "Contact", href: "#" },
+                  { text: "Privacy", href: "#" },
+                  { text: "Terms", href: "#" }
+                ]
               }
             ].map((section) => (
               <div key={section.title} className="space-y-4">
                 <h3 className="font-semibold text-lg">{section.title}</h3>
                 <ul className="space-y-2">
                   {section.links.map((link) => (
-                    <li key={link}>
-                      <a href="#" className="text-slate-400 hover:text-white transition-colors duration-200">
-                        {link}
+                    <li key={link.text}>
+                      <a href={link.href} className="text-slate-400 hover:text-white transition-colors duration-200">
+                        {link.text}
                       </a>
                     </li>
                   ))}
