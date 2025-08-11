@@ -20,7 +20,7 @@ STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key_here
 2. **Create the Price in Stripe:**
    - In your Stripe Dashboard, go to Products
    - Create a new product for your monthly membership
-   - Add a recurring price with ID: `price_1RtF7GGSpNbgjDfWCCtMPCqh`
+   - Add a recurring price with ID: `price_1Ruv0qGSpNbgjDfWZDPO913q`
    - Set the price to $25/month
 
 3. **Test the Integration:**

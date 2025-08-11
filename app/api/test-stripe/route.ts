@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const account = await stripe.accounts.retrieve();
     
     // Test if the price exists
-    const price = await stripe.prices.retrieve('price_1RtF7GGSpNbgjDfWCCtMPCqh');
+    const price = await stripe.prices.retrieve('price_1Ruv0qGSpNbgjDfWZDPO913q');
     
     return NextResponse.json({
       success: true,

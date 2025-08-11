@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
             metadata: {
               customer_id: customer.id,
               test_clock_id: testClock.id,
-              price_id: membershipType === 'monthly' ? 'price_1RtF7GGSpNbgjDfWCCtMPCqh' : membershipType === 'quarterly' ? 'price_1RtF7pGSpNbgjDfWuamgPFeq' : 'price_1Rtr03GSpNbgjDfWtUM9Nyll',
+              price_id: membershipType === 'monthly' ? 'price_1Ruv0qGSpNbgjDfWZDPO913q' : membershipType === 'quarterly' ? 'price_1Ruv0ZGSpNbgjDfWXxKNvnk9' : 'price_1Rtr03GSpNbgjDfWtUM9Nyll',
               membership_type: membershipType,
               patient_number: patientNumber,
               prescribing_doctor: prescribingDoctor,

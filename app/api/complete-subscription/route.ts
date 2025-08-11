@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
     }
 
               // 4. Create a subscription schedule directly (no regular subscription)
-          const priceId = session.metadata?.price_id || 'price_1RtF7GGSpNbgjDfWCCtMPCqh';
+          const priceId = session.metadata?.price_id || 'price_1Ruv0qGSpNbgjDfWZDPO913q';
           console.log('Creating subscription schedule with price:', priceId);
           
           // Calculate end date based on membership type
