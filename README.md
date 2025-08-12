@@ -67,11 +67,23 @@ Any changes you make to your deployed app will be automatically pushed to this r
 
 ### Testing Stripe Integration
 
+#### Standard Test Cards
+
 Use Stripe's test card numbers:
 - **Success**: `4242 4242 4242 4242`
 - **Decline**: `4000 0000 0000 0002`
 
 Any expiry date in the future and any 3-digit CVC will work with test cards.
+
+#### HSA/FSA Test Cards
+
+The following card numbers can be used to test HSA/FSA flows for both IIAS certified or 90% merchants:
+
+- **HSA Card (Visa)**: `4000 0512 3000 2839`
+- **FSA Card with IIAS Reporting (Visa)**: `4000 0512 3000 0072`
+- **FSA Card with IIAS Reporting (Mastercard)**: `5200 8282 8282 8897`
+
+These cards are specifically designed for testing healthcare-related payment scenarios and can be used to validate HSA (Health Savings Account) and FSA (Flexible Spending Account) payment flows in your medication subscription system.
 
 ## Deployment
 
@@ -91,3 +103,7 @@ Continue building your app on:
 2. Deploy your chats from the v0 interface
 3. Changes are automatically pushed to this repository
 4. Vercel deploys the latest version from this repository
+
+
+# Add AI capabilities
+ TBD
