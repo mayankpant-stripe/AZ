@@ -497,15 +497,15 @@ export default function CustomerJourneyPage() {
               isDark ? 'bg-white/10' : 'bg-white/80'
             } backdrop-blur-sm`}>
               <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                Process Flow
+                AZ Sequence
               </span>
               <a 
-                href="https://static.swimlanes.io/c7340ef361d08a55ed1f92780c140020.png" 
+                href="/AZSeq.png" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className={`font-semibold text-purple-600 hover:text-purple-500 transition-colors`}
               >
-                Swimlane Diagram
+                View Diagram
               </a>
             </div>
           </div>
@@ -1364,37 +1364,39 @@ export default function CustomerJourneyPage() {
                </a>
              </div>
 
-             <div className={`group p-6 rounded-2xl transition-all duration-300 hover:scale-105 ${
-               isDark 
-                 ? 'bg-purple-900/20 backdrop-blur-xl border border-purple-800/30 hover:bg-purple-900/30' 
-                 : 'bg-purple-50/80 backdrop-blur-xl border border-purple-200/50 hover:bg-purple-50 shadow-sm hover:shadow-lg'
-             }`}>
-               <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${
-                 isDark ? 'bg-purple-600' : 'bg-purple-500'
-               }`}>
-                 <RefreshCw className="w-5 h-5 text-white" />
-               </div>
-               <h4 className={`font-bold mb-2 ${
-                 isDark ? 'text-purple-300' : 'text-purple-700'
-               }`}>
-                 Process Flow
-               </h4>
-               <p className={`text-sm mb-3 ${
-                 isDark ? 'text-purple-200' : 'text-purple-600'
-               }`}>
-                 Visual swimlane diagram
-               </p>
-               <a 
-                 href="https://static.swimlanes.io/c7340ef361d08a55ed1f92780c140020.png"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className={`text-sm font-medium hover:underline ${
-                   isDark ? 'text-purple-400' : 'text-purple-600'
-                 }`}
-               >
-                 View Diagram →
-               </a>
-             </div>
+                           <div className={`group p-6 rounded-2xl transition-all duration-300 hover:scale-105 ${
+                isDark 
+                  ? 'bg-purple-900/20 backdrop-blur-xl border border-purple-800/30 hover:bg-purple-900/30' 
+                  : 'bg-purple-50/80 backdrop-blur-xl border border-purple-200/50 hover:bg-purple-50 shadow-sm hover:shadow-lg'
+              }`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${
+                  isDark ? 'bg-purple-600' : 'bg-purple-500'
+                }`}>
+                  <RefreshCw className="w-5 h-5 text-white" />
+                </div>
+                <h4 className={`font-bold mb-2 ${
+                  isDark ? 'text-purple-300' : 'text-purple-700'
+                }`}>
+                  AZ Sequence Diagram
+                </h4>
+                <p className={`text-sm mb-3 ${
+                  isDark ? 'text-purple-200' : 'text-purple-600'
+                }`}>
+                  Complete subscription flow diagram
+                </p>
+                <a 
+                  href="/AZSeq.png"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-sm font-medium hover:underline ${
+                    isDark ? 'text-purple-400' : 'text-purple-600'
+                  }`}
+                >
+                  View AZ Sequence →
+                </a>
+              </div>
+
+
 
              <div className={`group p-6 rounded-2xl transition-all duration-300 hover:scale-105 ${
                isDark 
